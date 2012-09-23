@@ -18,8 +18,18 @@ public class Grid {
         System.out.println("Grid constructed");
         spaces = BEGINNING_SPACES;
 
-        //crude test
+        //crude tests
         System.out.println(isDefined(spaces,0,4));
+        System.out.println(isDefined(spaces,5,0));
+        System.out.println(isAlive(spaces,1,2));
+        System.out.println(isAlive(spaces,1,1));
+    }
+
+    private boolean isAlive(int[][] table, int row, int col){
+        if(table[row][col] == 1){
+            return true;
+        }
+        return false;
     }
 
     private boolean isDefined(int[][] table, int row, int col){
