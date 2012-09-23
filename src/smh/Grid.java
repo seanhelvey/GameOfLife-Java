@@ -23,6 +23,69 @@ public class Grid {
         System.out.println(isDefined(spaces,5,0));
         System.out.println(isAlive(spaces,1,2));
         System.out.println(isAlive(spaces,1,1));
+        System.out.println(updateNeighborCount(spaces,0,0,0));
+        System.out.println(updateNeighborCount(spaces,2,2,0));
+        System.out.println(checkNeighbors(spaces,0,0,0));
+        System.out.println(checkNeighbors(spaces,2,2,0));
+
+    }
+
+    /*
+
+    */
+
+    private int checkNeighbors(int[][] table, int row, int col, int count){
+        int testRow = 0;
+        int testCol = 0;
+
+        //check above left
+        testRow = row-1;
+        testCol = col-1;
+        count = updateNeighborCount(table, testRow, testCol, count);
+
+        //check above
+        testRow = row-1;
+        testCol = col;
+        count = updateNeighborCount(table, testRow, testCol, count);
+
+        //check above right
+        testRow = row-1;
+        testCol = col+1;
+        count = updateNeighborCount(table, testRow, testCol, count);
+
+        //check right
+        testRow = row;
+        testCol = col+1;
+        count = updateNeighborCount(table, testRow, testCol, count);
+
+        //check lower right
+        testRow = row+1;
+        testCol = col+1;
+        count = updateNeighborCount(table, testRow, testCol, count);
+
+        //check below
+        testRow = row+1;
+        testCol = col;
+        count = updateNeighborCount(table, testRow, testCol, count);
+
+        //check lower left
+        testRow = row+1;
+        testCol = col-1;
+        count = updateNeighborCount(table, testRow, testCol, count);
+
+        //check left
+        testRow = row;
+        testCol = col-1;
+        count = updateNeighborCount(table, testRow, testCol, count);
+
+        return count;
+    }
+
+    private int updateNeighborCount(int[][] table, int row, int col, int count){
+        if(isDefined(table, row, col) && isAlive(table, row, col)){
+            count++;
+        }
+        return count;
     }
 
     private boolean isAlive(int[][] table, int row, int col){
