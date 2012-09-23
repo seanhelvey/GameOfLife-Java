@@ -1,5 +1,7 @@
 package smh;
 
+import java.util.*;
+
 /**
  * Created with IntelliJ IDEA.
  * User: seanhelvey
@@ -27,12 +29,23 @@ public class Grid {
         System.out.println(updateNeighborCount(spaces,2,2,0));
         System.out.println(checkNeighbors(spaces,0,0,0));
         System.out.println(checkNeighbors(spaces,2,2,0));
-
+        int[][] spacesCopy = new int[][] {{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}};
+        System.out.println(Arrays.deepEquals(spaces, spacesCopy));
+        copyValues(spaces, spacesCopy);
+        System.out.println(Arrays.deepEquals(spaces, spacesCopy));
     }
 
     /*
 
     */
+
+    private void copyValues(int[][] table, int[][] outTable){
+        for (int i = 0; i < table.length; i++) {
+            for (int j = 0; j < table[0].length; j++) {
+                table[i][j] = outTable[i][j];
+            }
+        }
+    }
 
     private int checkNeighbors(int[][] table, int row, int col, int count){
         int testRow = 0;
