@@ -12,14 +12,24 @@ public class Grid {
     public static final int[][] BEGINNING_SPACES =
             new int[][] {{0,0,0,0,0},{0,0,1,0,0},{0,0,1,0,0},{0,0,1,0,0},{0,0,0,0,0}};
 
-    private static int[][] spaces = BEGINNING_SPACES;
+    private static int[][] spaces;
 
     public Grid(){
         System.out.println("Grid constructed");
+        spaces = BEGINNING_SPACES;
+
+        //crude test
+        System.out.println(isDefined(spaces,0,4));
     }
 
-    public static void display(){
-        System.out.println("display called");
+    private boolean isDefined(int[][] table, int row, int col){
+        if(row < 0 || col < 0){
+            return false;
+        }
+        else if( row > table.length - 1 || col > table[0].length - 1 ){
+            return false;
+        }
+            return true;
     }
 
     @Override public String toString(){
