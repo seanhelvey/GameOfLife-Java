@@ -19,6 +19,12 @@ public class Game {
         System.out.println("playGame called");
         table = new Grid();
         System.out.println(table.toString());
+        table.evolve();
+        System.out.println(table.toString());
+        table.evolve();
+        System.out.println(table.toString());
     }
+
+
 
 }

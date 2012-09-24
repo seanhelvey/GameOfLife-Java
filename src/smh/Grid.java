@@ -11,33 +11,63 @@ import java.util.*;
  */
 public class Grid {
 
-    public static final int[][] BEGINNING_SPACES =
+    private static final int[][] BEGINNING_SPACES =
             new int[][] {{0,0,0,0,0},{0,0,1,0,0},{0,0,1,0,0},{0,0,1,0,0},{0,0,0,0,0}};
 
     private static int[][] spaces;
+    private static int[][] outSpaces;
 
     public Grid(){
         System.out.println("Grid constructed");
+        //setSpaces(BEGINNING_SPACES);
         spaces = BEGINNING_SPACES;
+        outSpaces = new int[][] {{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}};
 
         //crude tests
-        System.out.println(isDefined(spaces,0,4));
-        System.out.println(isDefined(spaces,5,0));
-        System.out.println(isAlive(spaces,1,2));
-        System.out.println(isAlive(spaces,1,1));
-        System.out.println(updateNeighborCount(spaces,0,0,0));
-        System.out.println(updateNeighborCount(spaces,2,2,0));
-        System.out.println(checkNeighbors(spaces,0,0,0));
-        System.out.println(checkNeighbors(spaces,2,2,0));
+        System.out.println(isDefined(0,4) + " true");
+        System.out.println(isDefined(5,0) + " false");
+        System.out.println(isAlive(1,2) + " true");
+        System.out.println(isAlive(1,1) + " false");
+        System.out.println(determineCellLife(0, 0) + " false");
+        System.out.println(determineCellLife(2, 2) + " true");
+        System.out.println(updateNeighborCount(0,0,0) + " 0");
+        System.out.println(updateNeighborCount(2,2,0) + " 1");
+        System.out.println(checkNeighbors(0,0) + " 0");
+        System.out.println(checkNeighbors(2,2) + " 2");
         int[][] spacesCopy = new int[][] {{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}};
-        System.out.println(Arrays.deepEquals(spaces, spacesCopy));
-        copyValues(spaces, spacesCopy);
-        System.out.println(Arrays.deepEquals(spaces, spacesCopy));
+        System.out.println(Arrays.deepEquals(getSpaces(), spacesCopy) + " false");
+        copyValues(spacesCopy, getSpaces());
+        System.out.println(Arrays.deepEquals(getSpaces(), spacesCopy) + " true");
+        int[][] spacesTest = new int[][] {{0,0,0,0,0},{0,0,0,0,0},{0,1,1,1,0},{0,0,0,0,0},{0,0,0,0,0}};
+        System.out.println(Arrays.deepEquals(getSpaces(), spacesTest) + " false");
+        evolve();
+        System.out.println(Arrays.deepEquals(getSpaces(), spacesTest) + " true");
     }
 
     /*
 
     */
+
+    private int[][] getSpaces(){
+        return spaces;
+    }
+    private int[][] getOutSpaces(){
+        return outSpaces;
+    }
+
+    public void evolve(){
+        for (int i = 0; i < getSpaces().length; i++) {
+            for (int j = 0; j < getSpaces()[0].length; j++) {
+                if(determineCellLife(i, j)){
+                    getOutSpaces()[i][j] = 1;
+                }
+                else{
+                    getOutSpaces()[i][j] = 0;
+                }
+            }
+        }
+        copyValues(getSpaces(), getOutSpaces());
+    }
 
     private void copyValues(int[][] table, int[][] outTable){
         for (int i = 0; i < table.length; i++) {
@@ -47,72 +77,96 @@ public class Grid {
         }
     }
 
-    private int checkNeighbors(int[][] table, int row, int col, int count){
-        int testRow = 0;
-        int testCol = 0;
+    private int checkNeighbors(int row, int col){
+        int testRow;
+        int testCol;
+        int count = 0;
 
         //check above left
         testRow = row-1;
         testCol = col-1;
-        count = updateNeighborCount(table, testRow, testCol, count);
+        count = updateNeighborCount(testRow, testCol, count);
 
         //check above
         testRow = row-1;
         testCol = col;
-        count = updateNeighborCount(table, testRow, testCol, count);
+        count = updateNeighborCount(testRow, testCol, count);
 
         //check above right
         testRow = row-1;
         testCol = col+1;
-        count = updateNeighborCount(table, testRow, testCol, count);
+        count = updateNeighborCount(testRow, testCol, count);
 
         //check right
         testRow = row;
         testCol = col+1;
-        count = updateNeighborCount(table, testRow, testCol, count);
+        count = updateNeighborCount(testRow, testCol, count);
 
         //check lower right
         testRow = row+1;
         testCol = col+1;
-        count = updateNeighborCount(table, testRow, testCol, count);
+        count = updateNeighborCount(testRow, testCol, count);
 
         //check below
         testRow = row+1;
         testCol = col;
-        count = updateNeighborCount(table, testRow, testCol, count);
+        count = updateNeighborCount(testRow, testCol, count);
 
         //check lower left
         testRow = row+1;
         testCol = col-1;
-        count = updateNeighborCount(table, testRow, testCol, count);
+        count = updateNeighborCount(testRow, testCol, count);
 
         //check left
         testRow = row;
         testCol = col-1;
-        count = updateNeighborCount(table, testRow, testCol, count);
+        count = updateNeighborCount(testRow, testCol, count);
 
         return count;
     }
 
-    private int updateNeighborCount(int[][] table, int row, int col, int count){
-        if(isDefined(table, row, col) && isAlive(table, row, col)){
+    private int updateNeighborCount(int row, int col, int count){
+        if(isDefined(row, col) && isAlive(row, col)){
             count++;
         }
         return count;
     }
 
-    private boolean isAlive(int[][] table, int row, int col){
-        if(table[row][col] == 1){
+    private boolean determineCellLife(int i, int j){
+        int currentValue = getSpaces()[i][j];
+        int numNeighbors = checkNeighbors(i, j);
+
+        //under population
+        if(currentValue == 1 && numNeighbors < 2){
+            return false;
+        }
+        //survival
+        else if(currentValue == 1 && (numNeighbors == 2 || numNeighbors == 3)){
+            return true;
+        }
+        //overcrowding
+        else if(currentValue == 1 && numNeighbors > 3){
+            return false;
+        }
+        //reproduction
+        else if(currentValue == 0 && numNeighbors == 3){
             return true;
         }
         return false;
     }
 
-    private boolean isDefined(int[][] table, int row, int col){
+    private boolean isAlive(int row, int col){
+        if(getSpaces()[row][col] == 1){
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isDefined(int row, int col){
         if(row < 0 || col < 0){
             return false;
         }
-        else if( row > table.length - 1 || col > table[0].length - 1 ){
+        else if( row > getSpaces().length - 1 || col > getSpaces()[0].length - 1 ){
             return false;
         }
             return true;
