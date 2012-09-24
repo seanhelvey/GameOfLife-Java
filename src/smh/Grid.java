@@ -18,10 +18,9 @@ public class Grid {
     private static int[][] outSpaces;
 
     public Grid(){
-        System.out.println("Grid constructed");
         //setSpaces(BEGINNING_SPACES);
-        spaces = BEGINNING_SPACES;
-        outSpaces = new int[][] {{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}};
+        setSpaces(BEGINNING_SPACES);
+        setOutSpaces(new int[][] {{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}});
 
         //crude tests
         System.out.println(isDefined(0,4) + " true");
@@ -44,15 +43,20 @@ public class Grid {
         System.out.println(Arrays.deepEquals(getSpaces(), spacesTest) + " true");
     }
 
-    /*
-
-    */
-
     private int[][] getSpaces(){
         return spaces;
     }
+
+    private void setSpaces(int[][] newSpaces){
+        spaces = newSpaces;
+    }
+
     private int[][] getOutSpaces(){
         return outSpaces;
+    }
+
+    private void setOutSpaces(int[][] newOutSpaces){
+        outSpaces = newOutSpaces;
     }
 
     public void evolve(){
@@ -175,7 +179,7 @@ public class Grid {
     @Override public String toString(){
         System.out.println("toString called");
         String returnVal = "";
-        for(int[] row : spaces){
+        for(int[] row : getSpaces()){
             for(int num : row){
                 returnVal += num;
             }

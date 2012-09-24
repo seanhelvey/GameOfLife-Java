@@ -9,20 +9,26 @@ package smh;
  */
 public class Game {
 
-    private static Grid table;
+    private static Grid grid;
 
     public Game(){
-        System.out.println("Game constructed");
+        setGrid(new Grid());
     }
 
-    public static void playGame(){
-        System.out.println("playGame called");
-        table = new Grid();
-        System.out.println(table.toString());
-        table.evolve();
-        System.out.println(table.toString());
-        table.evolve();
-        System.out.println(table.toString());
+    private Grid getGrid(){
+        return grid;
+    }
+
+    private void setGrid(Grid newGrid){
+        grid = newGrid;
+    }
+
+    public void playGame(){
+        System.out.println(getGrid().toString());
+        getGrid().evolve();
+        System.out.println(getGrid().toString());
+        getGrid().evolve();
+        System.out.println(getGrid().toString());
     }
 
 
