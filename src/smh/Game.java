@@ -30,7 +30,4 @@ public class Game {
         getGrid().evolve();
         System.out.println(getGrid().toString());
     }
-
-
-
 }
